@@ -1,0 +1,33 @@
+version: "3.6"
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: .Dockerfile
+    restart: always
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - postgres
+  db:
+    image: postgres
+    container_name: pg-data
+    env_file: server/docker.env
+    ports:
+      - '5432'
+    networks:
+      - postgres
+
+
+volumes:
+  pgdata:
+networks:
+  postgres:
+    driver: bridge
